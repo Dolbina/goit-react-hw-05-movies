@@ -1,10 +1,9 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useLocation, useParams, Link, Outlet } from 'react-router-dom';
-import { BackLink } from '../components/BackLink';
+import { BackLink } from '../../components/BackLink';
 
-import { fetchMoviesById } from '../services/api';
+import { fetchMoviesById } from '../../services/api';
 import { Title, Wrap, Img } from './MoviesDetails.styled';
-
 
 const MoviesDetails = () => {
   const { movieId } = useParams();
@@ -24,18 +23,18 @@ const MoviesDetails = () => {
     detailsMoviesById2(movieId);
   }, [movieId]);
 
-
   const date = () => {
-    if (detailsMovies.release_date) return detailsMovies.release_date.split('-')[0];
+    if (detailsMovies.release_date)
+      return detailsMovies.release_date.split('-')[0];
   };
 
-console.log(detailsMovies);
+  console.log(detailsMovies);
   return (
     <main>
       <BackLink to={backLinkHref}>Go back</BackLink>
       <Wrap>
         <div>
-          <Img  
+          <Img
             src={
               detailsMovies.poster_path
                 ? `https://image.tmdb.org/t/p/w300/${detailsMovies.poster_path}`

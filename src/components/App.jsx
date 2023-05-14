@@ -1,16 +1,16 @@
+import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
-
-import  Home  from '../pages/Home';
-import  Movies  from '../pages/Movies';
-import  MoviesDetails  from '../pages/MoviesDatails';
-import Cast from './Cast';
-import  Reviews  from './Reviews';
-import NotFound from '../pages/NotFound';
 import { SharedLayout } from './SharedLayout/SharedLayout';
 import { GlobalStyle } from './GlobalStyle';
 
-
-
+const Home = lazy(() => import('../pages/Home'));
+const Movies = lazy(() => import('../pages/Movies'));
+const MoviesDetails = lazy(() =>
+  import('../pages/MoviesDatails/MoviesDatails')
+);
+const Cast = lazy(() => import('./Cast'));
+const Reviews = lazy(() => import('./Reviews'));
+const NotFound = lazy(() => import('../pages/NotFound'));
 
 export const App = () => {
   return (
@@ -26,7 +26,7 @@ export const App = () => {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-      <GlobalStyle/>
+      <GlobalStyle />
     </>
   );
 };
