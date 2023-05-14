@@ -1,39 +1,90 @@
-import { useLocation, useParams, Link } from 'react-router-dom';
+import { useState, useEffect, Suspense } from 'react';
+import { useLocation, useParams, Link, Outlet } from 'react-router-dom';
 import { BackLink } from '../components/BackLink';
-import { getProductById } from '../fakeAPI';
 
- const MoviesDetails = () => {
-   const { id } = useParams();
-   const product = getProductById(id);
-   const location = useLocation();
-   const backLinkHref = location.state?.from ?? '/products';
-   return (
-     <main>
-       <BackLink to={backLinkHref}>Back to products</BackLink>
-       <img src="https://via.placeholder.com/960x240" alt="" />
-       <div>
-         <h2>
-           Product - {product.name} - {id}
-         </h2>
-         <p>
-           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus
-           sunt excepturi nesciunt iusto dignissimos assumenda ab quae
-           cupiditate a, sed reprehenderit? Deleniti optio quasi, amet natus
-           reiciendis atque fuga dolore? Lorem, ipsum dolor sit amet consectetur
-           adipisicing elit. Impedit suscipit quisquam incidunt commodi fugiat
-           aliquam praesentium ipsum quos unde voluptatum?
-         </p>
-       </div>
-       <ul>
-         <li>
-           <Link to="cast">Cast</Link>
-         </li>
-         <li>
-           <Link to="reviews">Reviews</Link>
-         </li>
-       </ul>
-     </main>
-   );
- };
+import { fetchMoviesById } from '../services/api';
+import { Title, Wrap, Img } from './MoviesDetails.styled';
+
+
+const MoviesDetails = () => {
+  const { movieId } = useParams();
+  const location = useLocation();
+  const [detailsMovies, setDetailsMovies] = useState({});
+
+  const backLinkHref = location.state?.from ?? '/';
+  useEffect(() => {
+    const detailsMoviesById2 = async movieId => {
+      try {
+        const detailsMoviesId = await fetchMoviesById(movieId);
+        setDetailsMovies(detailsMoviesId);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    detailsMoviesById2(movieId);
+  }, [movieId]);
+
+
+  const date = () => {
+    if (detailsMovies.release_date) return detailsMovies.release_date.split('-')[0];
+  };
+
+console.log(detailsMovies);
+  return (
+    <main>
+      <BackLink to={backLinkHref}>Go back</BackLink>
+      <Wrap>
+        <div>
+          <Img  
+            src={
+              detailsMovies.poster_path
+                ? `https://image.tmdb.org/t/p/w300/${detailsMovies.poster_path}`
+                : `https://via.placeholder.com/300x400?text=No+Poster`
+            }
+            alt={detailsMovies.title}
+          />
+        </div>
+        <div>
+          <Title>
+            {detailsMovies.title} ({date()})
+          </Title>
+
+          <p>User score: {detailsMovies.vote_average}</p>
+
+          {detailsMovies.overview && (
+            <>
+              <p>
+                <b>Overview</b>
+              </p>
+              <p>{detailsMovies.overview}</p>
+            </>
+          )}
+
+          {detailsMovies.genres && detailsMovies.genres.length > 0 && (
+            <p>
+              <b>Genres: </b>
+              <br />
+              {detailsMovies.genres.map(genre => genre.name).join(', ')}
+            </p>
+          )}
+        </div>
+      </Wrap>
+      <p>
+        <b>Additional information</b>
+      </p>
+      <ul>
+        <li>
+          <Link to="cast">Cast</Link>
+        </li>
+        <li>
+          <Link to="reviews">Reviews</Link>
+        </li>
+      </ul>
+      <Suspense fallback={<div>Loading subpage...</div>}>
+        <Outlet />
+      </Suspense>
+    </main>
+  );
+};
 
 export default MoviesDetails;

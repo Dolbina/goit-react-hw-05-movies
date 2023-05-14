@@ -1,6 +1,7 @@
 import { HiArrowLeft } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StyledLink = styled(Link)`
   display: inline-flex;
@@ -13,7 +14,7 @@ const StyledLink = styled(Link)`
   text-transform: uppercase;
 
   :hover {
-    color: orangered;
+    color: #034efc;
   }
 `;
 
@@ -24,4 +25,9 @@ export const BackLink = ({ to, children }) => {
       {children}
     </StyledLink>
   );
+};
+
+BackLink.propTypes = {
+  children: PropTypes.node.isRequired,
+  to: PropTypes.any.isRequired,
 };

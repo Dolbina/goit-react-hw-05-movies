@@ -1,23 +1,39 @@
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { fetchMoviesReviews } from '../services/api';
+
 const Reviews = () => {
+const { movieId } = useParams();
+const [moviesReviews, setMoviesReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchMoviesReviews2 = async () => {
+      try {
+        const { results  } = await fetchMoviesReviews(movieId);
+        setMoviesReviews(results );
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchMoviesReviews2();
+  }, [movieId]);
+  
   return (
     <section>
       <div>
-        <h2>First review - 4.6/5</h2>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Autem harum
-          architecto sapiente corporis, voluptatem quas voluptatibus fugiat
-          nulla commodi quidem, dolorem distinctio inventore blanditiis illo
-          tenetur aut enim ex laborum!
-        </p>
-      </div>
-      <div>
-        <h2>Second review - 4.8/5</h2>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti
-          nihil ea, eaque fugit amet possimus officiis asperiores aperiam facere
-          et?
-        </p>
-      </div>
+        {moviesReviews.length > 0 ? (
+          <ul>
+            {moviesReviews.map(review => (
+              <li key={review.id}>
+               
+                <h2>Author: {review.author}</h2>
+                <p>{review.content}</p>
+                  </li>
+                ))}
+          </ul>):(<p>No reviews information available</p>)
+}
+                      </div>
     </section>
   );
 };
