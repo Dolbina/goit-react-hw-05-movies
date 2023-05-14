@@ -27,6 +27,11 @@ const MoviesDetails = () => {
     if (detailsMovies.release_date)
       return detailsMovies.release_date.split('-')[0];
   };
+  const score = () => {
+    if (detailsMovies.vote_average)
+    return detailsMovies.vote_average.toFixed(1);
+}
+
 
   console.log(detailsMovies);
   return (
@@ -48,7 +53,7 @@ const MoviesDetails = () => {
             {detailsMovies.title} ({date()})
           </Title>
 
-          <p>User score: {detailsMovies.vote_average}</p>
+          <p>User score: {score()}</p>
 
           {detailsMovies.overview && (
             <>
